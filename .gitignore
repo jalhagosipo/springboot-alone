@@ -1,0 +1,11 @@
+# Project exclude paths
+/.gradle/
+/.idea/
+# Project exclude paths
+/java-api/build/
+/java-api/out/
+/java-api/out/production/classes/
+/java-api/out/test/classes/
+/kotlin-api/out/
+/kotlin-api/out/production/classes/
+/kotlin-api/out/test/classes/

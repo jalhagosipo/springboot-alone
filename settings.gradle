@@ -1,0 +1,4 @@
+rootProject.name = 'springboot-alone'
+include 'java-api'
+include 'kotlin-api'
+
