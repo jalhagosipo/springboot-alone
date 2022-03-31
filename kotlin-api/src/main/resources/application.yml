@@ -2,7 +2,10 @@ spring:
   jpa:
     show_sql: true
     properties:
-    hibernate:
-      dialect: org.hibernate.dialect.MySQL5InnoDBDialect
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL5InnoDBDialect
+  datasource:
+    hikari:
+      jdbc-url: jdbc:h2:mem:testdb;MODE=MYSQL
 
 spring.h2.console.enabled: true
