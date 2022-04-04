@@ -2,7 +2,7 @@ package com.webservice.kotlin.domain.posts
 
 
 import org.assertj.core.api.Assertions.assertThat
-import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.springframework.boot.test.context.SpringBootTest
@@ -13,7 +13,7 @@ import java.time.LocalDateTime
 @TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
 class PostsRepositoryTest(private val postsRepository: PostsRepository) {
 
-    @BeforeEach
+    @AfterEach
     fun cleanUp() = postsRepository.deleteAll()
 
     @Test

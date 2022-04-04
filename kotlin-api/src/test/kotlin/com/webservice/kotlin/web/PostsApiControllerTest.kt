@@ -20,9 +20,8 @@ import org.springframework.test.context.TestConstructor
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
-@AutoConfigureMockMvc
 class PostsApiControllerTest(
-    private var restTemplate: TestRestTemplate,
+    private val restTemplate: TestRestTemplate,
     private val postsRepository: PostsRepository
 ) {
     @LocalServerPort

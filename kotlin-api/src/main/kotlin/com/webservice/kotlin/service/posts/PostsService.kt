@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
 @Service
-class PostsService (val postsRepository: PostsRepository) {
+class PostsService (private val postsRepository: PostsRepository) {
 
     @Transactional
     fun save(requestDto: PostsSaveRequestDto): Long? {
