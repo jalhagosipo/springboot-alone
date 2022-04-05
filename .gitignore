@@ -9,3 +9,4 @@
 /kotlin-api/out/
 /kotlin-api/out/production/classes/
 /kotlin-api/out/test/classes/
+**/application-oauth.properties
