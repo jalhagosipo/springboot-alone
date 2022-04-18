@@ -1,4 +1,6 @@
 spring:
+  profiles:
+    include: oauth
   jpa:
     show_sql: true
     properties:
@@ -7,5 +9,7 @@ spring:
   datasource:
     hikari:
       jdbc-url: jdbc:h2:mem:testdb;MODE=MYSQL
+  session:
+    store-type: jdbc
 
 spring.h2.console.enabled: true

@@ -1,5 +1,7 @@
 package com.webservice.kotlin.web
 
+import com.webservice.kotlin.config.auth.LoginUser
+import com.webservice.kotlin.config.auth.dto.SessionUser
 import com.webservice.kotlin.service.posts.PostsService
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
@@ -7,11 +9,15 @@ import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 
 
+
 @Controller
 class IndexController(private val postsService: PostsService) {
     @GetMapping("/")
-    fun index(model: Model): String {
+    fun index(model: Model, @LoginUser sessionUser: SessionUser?): String {
         model.addAttribute("posts", postsService.findAllDesc())
+        sessionUser?.let {
+            model.addAttribute("userName", sessionUser.name)
+        }
         return "index"
     }
 
