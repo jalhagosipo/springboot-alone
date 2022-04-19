@@ -26,3 +26,19 @@ resource "aws_security_group" "alone_web" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 }
+
+# EC2
+resource "aws_instance" "web" {
+  ami = "ami-02de72c5dc79358c9" # Amazon Linux 2 Kernel 5.10 AMI 2.0.20220406.1 x86_64 HVM gp2
+  instance_type = "t2.micro"
+  key_name = aws_key_pair.alone_ec2.key_name
+  vpc_security_group_ids = [
+    aws_security_group.alone_web.id
+  ]
+  tags = {
+    Name                = "springboot-webservice"
+  }
+  root_block_device {
+    volume_size         = 30 # 프리티어 30GB까지 가능. default 8GB
+  }
+}
