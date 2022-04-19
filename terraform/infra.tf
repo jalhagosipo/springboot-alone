@@ -42,3 +42,12 @@ resource "aws_instance" "web" {
     volume_size         = 30 # 프리티어 30GB까지 가능. default 8GB
   }
 }
+
+# EIP
+resource "aws_eip" "elasticip" {
+  instance = aws_instance.web.id
+}
+
+output "EIP" {
+  value = aws_eip.elasticip.public_ip
+}
