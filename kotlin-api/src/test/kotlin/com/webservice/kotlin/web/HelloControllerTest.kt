@@ -1,21 +1,28 @@
 package com.webservice.kotlin.web
 
+import com.webservice.kotlin.config.auth.SecurityConfig
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
+import org.springframework.context.annotation.ComponentScan
+import org.springframework.context.annotation.FilterType
+import org.springframework.security.test.context.support.WithMockUser
 import org.springframework.test.context.ContextConfiguration
+import org.springframework.test.context.TestConstructor
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers
 import org.springframework.util.LinkedMultiValueMap
 
-@WebMvcTest
+@WebMvcTest(controllers = [HelloController::class],
+    excludeFilters = [
+        ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = [SecurityConfig::class])
+    ])
 @ContextConfiguration(classes = [HelloController::class])
-class HelloControllerTest {
-
-    @Autowired
-    private lateinit var mockMvc: MockMvc
+@TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
+@WithMockUser(roles = ["USER"])
+class HelloControllerTest(private val mockMvc: MockMvc) {
 
     @Test
     fun hello가_리턴된다() {
