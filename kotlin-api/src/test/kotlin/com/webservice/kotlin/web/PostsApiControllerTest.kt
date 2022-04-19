@@ -1,5 +1,6 @@
 package com.webservice.kotlin.web
 
+import com.fasterxml.jackson.databind.ObjectMapper
 import com.webservice.kotlin.domain.posts.Posts
 import com.webservice.kotlin.domain.posts.PostsRepository
 import com.webservice.kotlin.web.dto.PostsSaveRequestDto
@@ -10,22 +11,23 @@ import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.boot.test.web.client.TestRestTemplate
-import org.springframework.boot.web.server.LocalServerPort
-import org.springframework.http.HttpEntity
-import org.springframework.http.HttpMethod
-import org.springframework.http.HttpStatus
-import org.springframework.http.ResponseEntity
+import org.springframework.http.MediaType
+import org.springframework.security.test.context.support.WithMockUser
 import org.springframework.test.context.TestConstructor
+import org.springframework.test.web.servlet.MockMvc
+import org.springframework.test.web.servlet.ResultMatcher
+import org.springframework.test.web.servlet.post
+import org.springframework.test.web.servlet.put
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
+@AutoConfigureMockMvc
+@WithMockUser(roles = ["USER"])
 class PostsApiControllerTest(
-    private val restTemplate: TestRestTemplate,
+    private val mockMvc: MockMvc,
+    private val objectMapper: ObjectMapper,
     private val postsRepository: PostsRepository
 ) {
-    @LocalServerPort
-    private val port = 0
 
     @AfterEach
     fun tearDown() = postsRepository.deleteAll()
@@ -35,24 +37,25 @@ class PostsApiControllerTest(
     fun `Posts 등록된다FUN`() {
         //given
         val title = "title"
-        val content = "content"
+        val postContent = "content"
 
-        val requestDto = PostsSaveRequestDto(title, content, "author")
-        val url = "http://localhost:$port/api/v1/posts"
+        val requestDto = PostsSaveRequestDto(title, postContent, "author")
 
-        // when
-        val responseEntity: ResponseEntity<Long> = restTemplate.postForEntity(
-            url, requestDto,
-            Long::class.java
-        )
+        //when
+        val resultActionsDsl = mockMvc.post("/api/v1/posts") {
+            contentType = MediaType.APPLICATION_JSON
+            content = objectMapper.writeValueAsString(requestDto)
+        }.andDo { print() }
+        val posts = postsRepository.findAll()
 
-        // then
-        assertThat(responseEntity.statusCode).isEqualTo(HttpStatus.OK)
-        assertThat(responseEntity.body).isGreaterThan(0L)
-
-        val all = postsRepository.findAll()
-        assertThat(all[0].title).isEqualTo(title)
-        assertThat(all[0].content).isEqualTo(content)
+        //then
+        resultActionsDsl.andExpect {
+            status { isOk }
+            ResultMatcher { it.response.contentAsString.toLong() > 0 }
+        }
+        assertThat(posts).hasSize(1)
+        assertThat(posts[0].content).isEqualTo(postContent)
+        assertThat(posts[0].title).isEqualTo(title)
     }
 
     @Test
@@ -60,29 +63,28 @@ class PostsApiControllerTest(
     fun `Posts 수정된다FUN`() {
         //given
         val title = "title"
-        val content = "content"
-        val savedPosts = postsRepository.save(Posts(title, content, "jalhagosipo"))
+        val postContent = "content"
+        val updateTitle = "update title"
+        val updateContent = "content updated"
+        val savedPost = postsRepository.save(Posts(title = title, content = postContent, author = "author"))
 
-        val updateId = savedPosts.id
-        val expectedTitle = "title2"
-        val expectedContent = "content2"
-        val requestDto = PostsUpdateRequestDto(expectedTitle, expectedContent)
-
-        val url = "http://localhost:$port/api/v1/posts/$updateId"
-
-        val requestEntity: HttpEntity<PostsUpdateRequestDto> = HttpEntity(requestDto)
+        val requestDto = PostsUpdateRequestDto(title = updateTitle, content = updateContent)
 
         //when
-        val responseEntity = restTemplate
-            .exchange(url, HttpMethod.PUT, requestEntity, Long::class.java)
+        val resultActionsDsl = mockMvc.put("/api/v1/posts/${savedPost.id}") {
+            contentType = MediaType.APPLICATION_JSON
+            content = objectMapper.writeValueAsString(requestDto)
+        }.andDo { print() }
+        val posts = postsRepository.findAll()
 
         //then
-        assertThat(responseEntity.statusCode).isEqualTo(HttpStatus.OK)
-        assertThat(responseEntity.body).isGreaterThan(0L)
-
-        val all = postsRepository.findAll()
-        assertThat(all[0].title).isEqualTo(expectedTitle)
-        assertThat(all[0].content).isEqualTo(expectedContent)
+        resultActionsDsl.andExpect {
+            status { isOk }
+            ResultMatcher { result -> assertThat(result.response.contentAsString.toLongOrNull()).isEqualTo(savedPost.id) }
+        }
+        assertThat(posts).hasSize(1)
+        assertThat(posts[0].content).isEqualTo(updateContent)
+        assertThat(posts[0].title).isEqualTo(updateTitle)
     }
 
 }
