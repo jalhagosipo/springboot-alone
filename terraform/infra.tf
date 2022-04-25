@@ -1,24 +1,21 @@
-# key pair 생성 및 local에 pem file 저장
-resource "tls_private_key" "private_key" {
-  algorithm = "RSA"
-  rsa_bits  = 4096
-}
-
 resource "aws_key_pair" "alone_ec2" {
   key_name   = "alone_ec2"
   public_key = file("~/.ssh/id_rsa.pub")
-}
-
-resource "local_file" "ssh_key" {
-  filename = "${aws_key_pair.alone_ec2.key_name}.pem"
-  content = tls_private_key.private_key.private_key_pem
-  file_permission     = "600"
 }
 
 ## 보안 그룹
 resource "aws_security_group" "alone_web" {
   name        = "Alone EC2 Security Group"
   description = "Alone EC2 Security Group"
+
+  # Terraform removes the default rule
+  egress {
+    from_port = 0
+    to_port = 0
+    protocol = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
   ingress {
     from_port = 22                                           #인바운드 시작 포트
     to_port = 22                                             #인바운드 끝나는 포트
