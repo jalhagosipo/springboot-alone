@@ -1,6 +1,18 @@
+# key pair 생성 및 local에 pem file 저장
+resource "tls_private_key" "private_key" {
+  algorithm = "RSA"
+  rsa_bits  = 4096
+}
+
 resource "aws_key_pair" "alone_ec2" {
   key_name   = "alone_ec2"
   public_key = file("~/.ssh/id_rsa.pub")
+}
+
+resource "local_file" "ssh_key" {
+  filename = "${aws_key_pair.alone_ec2.key_name}.pem"
+  content = tls_private_key.private_key.private_key_pem
+  file_permission     = "600"
 }
 
 ## 보안 그룹
