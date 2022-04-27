@@ -107,7 +107,6 @@ resource "aws_db_instance" "alone_db" {
   ]
   identifier = "alone-db"
   db_name = "alone_db"
-  apply_immediately=true
 }
 
 resource "aws_db_parameter_group" "alone_db_parameter_group" {
@@ -139,3 +138,16 @@ resource "aws_db_parameter_group" "alone_db_parameter_group" {
     value = 150
   }
 }
+
+# S3
+resource "aws_s3_bucket" "alone-springboot-build" {
+  bucket =  "22-alone-springboot-build"
+}
+
+resource "aws_s3_bucket_public_access_block" "alone-block" {
+  bucket = aws_s3_bucket.alone-springboot-build.id
+
+  block_public_acls   = true
+  block_public_policy = true
+}
+
