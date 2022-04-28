@@ -41,7 +41,7 @@ deploy:
     access_key_id: $AWS_ACCESS_KEY # Travis settings에 설정된 값
     secret_access_key: $AWS_SECRET_KEY
     bucket: 22-alone-springboot-build
-    key: springboot-webservice-project.zip
+    key: springboot-alone.zip
     bundle_type: zip
     application: alone-springboot-webservice # 앞서 등록한 codedeploy애플리케이션
     deployment_group: alone-springboot-webservice-group # 앞서 등록한 codedeploy 배포그룹
