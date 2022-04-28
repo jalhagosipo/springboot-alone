@@ -11,3 +11,5 @@
 /kotlin-api/out/test/classes/
 **/application-oauth.properties
 **/application-oauth.yml
+**/application-real-db.properties
+**/application-real-db.yml
