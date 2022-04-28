@@ -40,7 +40,7 @@ deploy:
     key: springboot-webservice-project.zip
     bundle_type: zip
     application: alone-springboot-webservice # 앞서 등록한 codedeploy애플리케이션
-    deploy_group: alone-springboot-webservice-group # 앞서 등록한 codedeploy 배포그룹
+    deployment_group: alone-springboot-webservice-group # 앞서 등록한 codedeploy 배포그룹
     region: ap-northeast-2
     wait-until-deployed: true
 
