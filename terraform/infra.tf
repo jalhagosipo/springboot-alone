@@ -22,6 +22,14 @@ resource "aws_security_group" "alone_web" {
     protocol = "tcp"                                         #사용할 프로토콜
     cidr_blocks = ["${chomp(data.http.myip.body)}/32"]       #허용할 IP 범위
   }
+
+  ingress {
+    from_port = 80
+    to_port = 80
+    protocol = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
   ingress {
     from_port = 8080
     to_port = 8080
@@ -97,8 +105,8 @@ resource "aws_db_instance" "alone_db" {
   engine = "mariadb"
   engine_version = "10.6"
   instance_class = "db.t2.micro"
-  username = "" # TODO
-  password = "" # TODO
+  username = "admin" # TODO
+  password = "admin123" # TODO
   parameter_group_name = aws_db_parameter_group.alone_db_parameter_group.name
   publicly_accessible = true
   skip_final_snapshot = true
