@@ -15,6 +15,6 @@ class ProfileController(
         val realProfiles = arrayOf("real", "real1", "real2")
         val defaultProfile = if (profiles.isEmpty()) "default" else profiles[0]
 
-        return profiles.firstOrNull { o: String -> realProfiles.contains(o) } ?: defaultProfile
+        return profiles.firstOrNull { realProfiles.contains(it) } ?: defaultProfile
     }
 }
