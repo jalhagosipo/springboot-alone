@@ -1,4 +1,6 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import java.util.Date
+import java.text.SimpleDateFormat
 
 plugins {
     id("org.springframework.boot") version "2.2.4.RELEASE"
@@ -18,7 +20,7 @@ allOpen {
 }
 
 group = "com.webservice.kotlin"
-version = '1.0.1-SNAPSHOT-'+new Date().format("yyyyMMddHHmmss")
+version = "1.0.1-SNAPSHOT-" +  SimpleDateFormat("yyyyMMddHHmmss").format(Date())
 java.sourceCompatibility = JavaVersion.VERSION_11
 
 
