@@ -11,8 +11,6 @@ plugins {
     kotlin("kapt") version "1.3.61"
 }
 
-
-
 allOpen {
     annotation("javax.persistence.Entity")
     annotation("javax.persistence.Embeddable")
