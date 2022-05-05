@@ -18,7 +18,7 @@ allOpen {
 }
 
 group = "com.webservice.kotlin"
-version '1.0.1-SNAPSHOT-'+new Date().format("yyyyMMddHHmmss")
+version = '1.0.1-SNAPSHOT-'+new Date().format("yyyyMMddHHmmss")
 java.sourceCompatibility = JavaVersion.VERSION_11
 
 
