@@ -10,7 +10,7 @@ import org.springframework.test.web.servlet.ResultMatcher
 import org.springframework.test.web.servlet.get
 
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
 @TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
 @AutoConfigureMockMvc
 class IndexControllerTest(private val mockMvc: MockMvc) {
